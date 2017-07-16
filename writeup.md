@@ -26,7 +26,7 @@ The goals / steps of this project are the following:
 [image4]: ./output_images/test1_warped.png "Warp Example"
 [image4.5]: ./output_images/test1_output.png "Centroids"
 [image5]: ./output_images/test1_poly.png "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
+[image6]: ./output_images/test1_final.png "Output"
 [video1]: ./project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -109,11 +109,16 @@ Then in the 14th cell I pass those points to a polynomial fit. The resulting pol
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+I did this in the 15th cell. First I put in an estimate for the relative x and y pixel dimensions. Then I refit the polygon. Unlike the example, I didn't have a full linspace, but rather my several example points, so I needed to adjust y_eval to be replaced with the max right and left heights. They could as easily be hard coded 720, the image max. Based on the tangential curvature function, we have a curve that is on the oder of 2-3km wide. Considering the poor quality of the right lane line in the test1.jpg image, this should be sufficiently on-target.
 
-#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+The off-center calculation was as simple as finding r-width minus l-width, so `(r-c) - (c-l)` or `r + l - 2c`. Then I convert that pixel offset with the x pixel conversion factor established above.
+```txt
+>    2194.94847946 m 3605.74113663 m
+     drift right:  0.153285714286 m
+```
+#### 6.Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+I implemented this step in the 16th cell, getting the transform from dst->src as Minv and applying it a polygon of the lane space to generate the following image:
 
 ![alt text][image6]
 
@@ -131,4 +136,8 @@ Here's a [link to my video result](./project_video.mp4)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.
+
+California Vehicle Code stipulates that in the event of a left line only, drivers are to stay as close to the left as possible. Most of our techniques are depedent on a full 2-line border. We could put in failsafes to allow for adherence to one or the other in the even of a loss of lane, but this always presents the risk of a lane jump.
+
+Considering robustness, I could have packaged my code in helper functions, instead of dumping it into a giant video frame processing function at the end. So much of this project was taken directly from the lessons that I have worked in this way to minimize the extra overhead in nameing functions and passing variables back and forth. I intend to take more authority over the projects I originate.
