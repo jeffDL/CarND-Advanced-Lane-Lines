@@ -22,9 +22,10 @@ The goals / steps of this project are the following:
 [image1]: ./output_images/Calibration.png "Undistorted"
 [image2]: ./test_images/test1.jpg "Road Transformed"
 [image2.5]: ./output_images/test1_undistorted.png "Road Undistorted"
-[image3]: ./output_images/ "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
+[image3]: ./output_images/test1_binary.png "Binary Example"
+[image4]: ./output_images/test1_warped.png "Warp Example"
+[image4.5]: ./output_images/test1_output.png "Centroids"
+[image5]: ./output_images/test1_poly.png "Fit Visual"
 [image6]: ./examples/example_output.jpg "Output"
 [video1]: ./project_video.mp4 "Video"
 
@@ -72,10 +73,10 @@ The code for my perspective transform includes a function called `warper()`, whi
 
 ```python
 src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
+    [[(img_size[0] / 2) - 60, img_size[1] / 2 + 100],
     [((img_size[0] / 6) - 10), img_size[1]],
     [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
+    [(img_size[0] / 2 + 60), img_size[1] / 2 + 100]])
 dst = np.float32(
     [[(img_size[0] / 4), 0],
     [(img_size[0] / 4), img_size[1]],
@@ -87,10 +88,10 @@ This resulted in the following source and destination points:
 
 | Source        | Destination   |
 |:-------------:|:-------------:|
-| 585, 460      | 320, 0        |
+| 580, 460      | 320, 0        |
 | 203, 720      | 320, 720      |
 | 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
+| 700, 460      | 960, 0        |
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
@@ -98,7 +99,11 @@ I verified that my perspective transform was working as expected by drawing the 
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+In the 12th cell of the notebook I begin detecting the lane lines. I decided to use the sliding window technique to establish a collection of candidate lane points. This resulted in the following centroid fits:
+
+![alt][image4.5]
+
+Then in the 14th cell I pass those points to a polynomial fit. The resulting polynomial regressions for image `test1.jpg` are shown below:
 
 ![alt text][image5]
 
