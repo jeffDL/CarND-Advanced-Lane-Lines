@@ -138,6 +138,10 @@ Here's a [link to my video result](./project_video.mp4)
 
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.
 
-California Vehicle Code stipulates that in the event of a left line only, drivers are to stay as close to the left as possible. Most of our techniques are depedent on a full 2-line border. We could put in failsafes to allow for adherence to one or the other in the even of a loss of lane, but this always presents the risk of a lane jump.
+Looking at the output video, my lines are very consistent with the video, save for a few frames which drop on the right side. This is probably due to the broken line on the right: the line is lost for a frame and defaults to the centerline, before recovering in the next. My performance on the harder video was nothing to write home about: I mostly detected the left half alone. The harder challenge, however, presented very interesting (buggy) behavior, and it whips back and forth between some very narrow curvatures, possibly due to the elevation change skewing the perspective of the road.
 
-Considering robustness, I could have packaged my code in helper functions, instead of dumping it into a giant video frame processing function at the end. So much of this project was taken directly from the lessons that I have worked in this way to minimize the extra overhead in nameing functions and passing variables back and forth. I intend to take more authority over the projects I originate.
+California Vehicle Code stipulates that in the event of a single left line, drivers are to stay as close to the left as possible. Most of our techniques are dependent on a full 2-line border, and we could put in failsafes to keep to the center line if the shoulder line is gone.
+
+Considering robustness, I could have packaged my code into more helper functions, instead of recopying a large part of my notebook into a giant `processFrame()` function at the end. So much of this project was taken directly from the lessons that I have worked in this way to minimize the extra overhead in nameing functions and passing variables back and forth. I intend to take more authority over the projects I originate.
+
+And in terms of performance, I could use strong detections from prior frames to inform the search region for subsequent frames. I could also add smoothing between frames to cut down on jitter.
